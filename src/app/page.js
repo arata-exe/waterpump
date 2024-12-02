@@ -10,7 +10,7 @@ export default function Home() {
 
   const handleControl = async (action, button) => {
     try {
-      const res = await fetch(`http://192.168.1.127/${action}`);
+      const res = await fetch(`https://waterpump-opal.vercel.app/${action}`);
       if (!res.ok) {
         throw new Error(`HTTP Error! Status: ${res.status}`);
       }

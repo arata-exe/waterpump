@@ -1,101 +1,166 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [mode, setMode] = useState("manual");
+  const [pumpStatus, setPumpStatus] = useState(0);
+  const [isPumpRunning, setIsPumpRunning] = useState(false);  // สถานะการทำงานของปั๊ม
+  const [activeButton, setActiveButton] = useState(""); // สถานะของปุ่มที่ถูกกด
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const handleControl = async (action, button) => {
+    try {
+      const res = await fetch(`http://192.168.1.127/${action}`);
+      if (!res.ok) {
+        throw new Error(`HTTP Error! Status: ${res.status}`);
+      }
+      const data = await res.json();
+      setMode(data.mode);
+      setPumpStatus(data.pump_status);
+      setIsPumpRunning(data.pump_status === 1);  // อัพเดตสถานะการทำงานของปั๊ม
+
+      // ตั้งค่าปุ่มที่ถูกกด
+      setActiveButton(button);
+    } catch (error) {
+      console.error("Error connecting to Pico W:", error);
+      alert(`Failed to connect to Pico W: ${error.message}`);
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <h1 style={styles.header}>Water Pump Control</h1>
+      <p style={styles.text}>Current Mode: <b>{mode}</b></p>
+      <p style={styles.text}>Pump Status: <b>{pumpStatus === 1 ? "ON" : "OFF"}</b></p>
+      
+      <div style={styles.buttonContainer}>
+        <button 
+          onClick={() => handleControl("manual/on", "on")} 
+          style={activeButton === "on" ? { ...styles.button, backgroundColor: "#388E3C" } : { ...styles.button, backgroundColor: "#4CAF50" }}
+        >
+          Turn On
+        </button>
+        <button 
+          onClick={() => handleControl("manual/off", "off")} 
+          style={activeButton === "off" ? { ...styles.button, backgroundColor: "#d32f2f" } : { ...styles.button, backgroundColor: "#F44336" }}  // เพิ่มสีแดงเข้ม
+        >
+          Turn Off
+        </button>
+      </div>
+
+      <div style={styles.autoContainer}>
+        <div style={styles.autoWithStatus}>
+          <button 
+            onClick={() => handleControl("set/auto", "auto")} 
+            style={activeButton === "auto" ? { ...styles.autoButton, backgroundColor: "#ff9800" } : { ...styles.autoButton, backgroundColor: "#4CAF50" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Auto Mode
+          </button>
+          <div style={{ ...styles.statusBar, backgroundColor: isPumpRunning ? "#4CAF50" : "#f44336" }} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: "60px",  // เพิ่มพื้นที่ padding เพื่อให้หน้าดูใหญ่ขึ้น
+    fontFamily: "Arial, sans-serif",
+    textAlign: "center",
+    backgroundColor: "#fff",
+    borderRadius: "15px",  // ขอบมนที่ใหญ่ขึ้น
+    boxShadow: "0 6px 18px rgba(0, 0, 0, 0.15)",  // เพิ่มเงาเพื่อให้หน้าดูเด่นขึ้น
+    maxWidth: "700px",     // ขยายความกว้างของ container
+    margin: "60px auto",   // เพิ่ม margin ด้านบนและล่างเพื่อให้อยู่กลางหน้า
+  },
+  header: {
+    fontSize: "48px",  // ขยายขนาดตัวอักษรของ Water Pump Control
+    color: "#333",
+    margin: "20px 0",   // เพิ่มระยะห่างระหว่างข้อความ
+  },
+  text: {
+    fontSize: "28px",  // ขยายขนาดตัวอักษร
+    color: "#333",
+    margin: "20px 0",   // เพิ่มระยะห่างระหว่างข้อความ
+  },
+  buttonContainer: {
+    marginTop: "40px",
+    display: "flex",           // ใช้ flexbox เพื่อให้ปุ่มอยู่ข้างกัน
+    justifyContent: "center",  // จัดตำแหน่งปุ่มให้อยู่กลาง
+    gap: "20px",               // ลดช่องว่างระหว่างปุ่ม Turn On และ Turn Off
+  },
+  button: {
+    color: "white",
+    padding: "25px 50px",      // เพิ่มขนาดของปุ่ม
+    fontSize: "22px",          // ขยายขนาดข้อความในปุ่ม
+    border: "none",
+    borderRadius: "12px",      // ขอบมนที่ใหญ่ขึ้น
+    cursor: "pointer",
+    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+    transition: "background-color 0.3s ease",  // การเปลี่ยนสีเมื่อ hover
+    width: "250px",            // ขยายขนาดของปุ่มให้กว้างขึ้น
+  },
+  autoContainer: {
+    marginTop: "40px",
+  },
+  autoWithStatus: {
+    display: "flex",             // ใช้ flexbox เพื่อให้ปุ่ม Auto อยู่ข้างแทบสถานะ
+    justifyContent: "center",    // จัดปุ่มและแทบสถานะให้อยู่ตรงกลาง
+    alignItems: "center",        // ให้ทั้งปุ่มและแทบสถานะอยู่ในแนวเดียวกัน             
+  },
+  autoButton: {
+    backgroundColor: "#4CAF50",  // ค่าเริ่มต้นเป็นสีเขียว
+    color: "white",
+    padding: "25px 50px",        // ขยายขนาดของปุ่ม
+    fontSize: "22px",            // ขยายขนาดข้อความในปุ่ม
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+    width: "250px",              // ให้ปุ่ม Auto ยาวเท่ากับปุ่ม Turn On/Off
+  },
+  statusBar: {
+    height: "15px",              // เพิ่มความสูงของแทบสถานะ
+    borderRadius: "8px",         // ขอบมนที่ใหญ่ขึ้น
+    marginLeft: "20px",          // เพิ่มระยะห่างระหว่างปุ่มและแทบ
+    width: "250px",              // ขยายขนาดแทบสถานะให้เท่ากับปุ่ม
+  },
+
+  // เพิ่ม media queries เพื่อให้รองรับมือถือ
+  '@media (max-width: 768px)': {
+    container: {
+      padding: "20px",  // ลด padding เมื่อบนมือถือ
+      margin: "20px",   // ลด margin ด้านบนและล่าง
+    },
+    header: {
+      fontSize: "36px",  // ลดขนาดตัวอักษร
+    },
+    text: {
+      fontSize: "20px",  // ลดขนาดตัวอักษร
+    },
+    button: {
+      fontSize: "18px",  // ลดขนาดข้อความในปุ่ม
+      padding: "15px 30px",  // ลดขนาดปุ่ม
+      width: "200px",  // ลดขนาดปุ่ม
+    },
+    autoButton: {
+      fontSize: "18px",  // ลดขนาดข้อความในปุ่ม Auto
+      padding: "15px 30px",  // ลดขนาดปุ่ม
+      width: "200px",  // ลดขนาดปุ่ม
+    },
+    statusBar: {
+      width: "200px",  // ลดขนาดแทบสถานะ
+    },
+
+    // ลดขนาดตัวอักษรสำหรับข้อความที่แสดงในโทรศัพท์
+    '@media (max-width: 480px)': {
+      header: {
+        fontSize: "30px",  // ลดขนาดข้อความใน header
+      },
+      text: {
+        fontSize: "16px",  // ลดขนาดข้อความในข้อความ
+      },
+    },
+  },
+};

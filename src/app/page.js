@@ -1,3 +1,5 @@
+'use client'; // เพิ่มบรรทัดนี้
+
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 

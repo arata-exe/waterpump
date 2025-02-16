@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
@@ -6,7 +5,7 @@ const HomePage = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
-    const fetchdata = async () => {
+  const fetchdata = async () => {
     try {
       const response = await fetch("/api/control", {
         method: 'GET',
@@ -22,7 +21,7 @@ const HomePage = () => {
       setError(error);
     }
   };
-  
+
   const handleUpdateS = async (id, value) => {
     try {
       const response = await fetch("/api/control", {
@@ -32,12 +31,14 @@ const HomePage = () => {
         },
         body: JSON.stringify({ state: value }),
       });
-    fetchdata();
-
-
+      
       if (!response.ok) {
         throw new Error("Failed to update state");
       }
+      
+      // หลังจากอัพเดตสถานะแล้ว ให้เปลี่ยนโหมดเป็น manual
+      await handleUpdateM(id, "manual");  // เปลี่ยนโหมดเป็น manual
+      fetchdata();  // รีเฟรชข้อมูล
 
     } catch (error) {
       console.error("Error updating state:", error);
@@ -65,7 +66,6 @@ const HomePage = () => {
       setError(error);
     }
   };
-
 
   useEffect(() => {
     fetchdata();
@@ -95,8 +95,7 @@ const HomePage = () => {
           <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
             <div className="card-body d-flex flex-column">
               <h5 className="card-title border border-dark p-2 rounded">Power Control</h5>
-              
-              <div className="d-flex gap-3 mt-auto">
+               <div className="d-flex gap-3 mt-auto">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleUpdateS(data[0]?.id, 0)}
@@ -115,12 +114,11 @@ const HomePage = () => {
         </div>
 
         <div className="col-md-4 mb-4 d-flex">
-          {/* Card for LED Status & Controls */}
+          {/* Card for Mode Control */}
           <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
             <div className="card-body d-flex flex-column">
               <h5 className="card-title border border-dark p-2 rounded">Mode Control</h5>
-              
-              <div className="d-flex gap-3 mt-auto">
+               <div className="d-flex gap-3 mt-auto">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleUpdateM(data[0]?.id, "auto")}

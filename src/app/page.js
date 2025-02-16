@@ -75,7 +75,7 @@ const HomePage = () => {
 
   return (
     <div className="container mt-4">
-      <h1 className="mb-4 text-center">Sensor Dashboard</h1>
+      <h1 className="mb-4 text-center">Water pump control</h1>
       <div className="row">
         <div className="col-md-4 mb-4 d-flex">
           {/* Card for Ultrasonic & LED Ultrasonic */}

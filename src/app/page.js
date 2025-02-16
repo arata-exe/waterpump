@@ -91,10 +91,14 @@ const HomePage = () => {
     fetchdata();
   }, []);
 
-  const getStatusColor = () => {
-    const { state, mode } = data[0] || {};
-    if (mode === "auto") return "bg-primary";
-    return state === "1" ? "bg-success" : "bg-danger";
+  const getPowerStatusColor = () => {
+    const { state } = data[0] || {};
+    return state === "1" ? "bg-success" : "bg-danger"; // สถานะ Power (ON = เขียว, OFF = แดง)
+  };
+
+  const getModeStatusColor = () => {
+    const { mode } = data[0] || {};
+    return mode === "auto" ? "bg-primary" : "bg-warning"; // สถานะ Mode (auto = ฟ้า, manual = เหลือง)
   };
 
   return (
@@ -102,8 +106,8 @@ const HomePage = () => {
       <div className="col-md-5 d-flex flex-column p-4 rounded shadow-lg" style={{ backgroundColor: isDarkMode ? '#444' : '#f8f9fa', marginTop: '30px' }}>
         <h1 className="text-center mb-4 text-primary">Water Pump Dashboard</h1>
 
-        {/* แถบสีสถานะ (แสดงแค่แถบสีสถานะเดียว) */}
-        <div className={`p-2 mb-3 text-white ${getStatusColor()}`} style={{ height: '30px', borderRadius: '5px' }}></div>
+        {/* แถบสีสถานะ Power */}
+        <div className={`p-2 mb-3 text-white ${getPowerStatusColor()}`} style={{ height: '30px', borderRadius: '5px' }}></div>
 
         {/* กล่องควบคุมสถานะและโหมดในกล่องเดียวกัน */}
         <div className="card mb-3 border-0" style={{ backgroundColor: isDarkMode ? '#555' : '#fff' }}>
@@ -125,6 +129,9 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
+        {/* แถบสีสถานะ Mode */}
+        <div className={`p-2 mb-3 text-white ${getModeStatusColor()}`} style={{ height: '30px', borderRadius: '5px' }}></div>
 
         {/* กล่องควบคุมโหมด */}
         <div className="card border-0" style={{ backgroundColor: isDarkMode ? '#555' : '#fff' }}>

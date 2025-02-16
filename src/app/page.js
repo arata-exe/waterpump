@@ -94,20 +94,20 @@ const HomePage = () => {
           {/* Card for LED Status & Controls */}
           <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
             <div className="card-body d-flex flex-column">
-              <h5 className="card-title border border-dark p-2 rounded">State Controls</h5>
+              <h5 className="card-title border border-dark p-2 rounded">Power Control</h5>
               
               <div className="d-flex gap-3 mt-auto">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleUpdateS(data[0]?.id, 0)}
                 >
-                  0
+                  off
                 </button>
                 <button
                   className="btn btn-success"
                   onClick={() => handleUpdateS(data[0]?.id, 1)}
                 >
-                  1
+                  on
                 </button>
               </div>
             </div>
@@ -118,7 +118,7 @@ const HomePage = () => {
           {/* Card for LED Status & Controls */}
           <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
             <div className="card-body d-flex flex-column">
-              <h5 className="card-title border border-dark p-2 rounded">Mode Controls</h5>
+              <h5 className="card-title border border-dark p-2 rounded">Mode Control</h5>
               
               <div className="d-flex gap-3 mt-auto">
                 <button

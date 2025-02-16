@@ -1,4 +1,4 @@
-'use client'; // เพิ่มบรรทัดนี้
+'use client'; // Add this line to make this a client component
 
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
@@ -37,7 +37,7 @@ const HomePage = () => {
       if (!response.ok) {
         throw new Error("Failed to update state");
       }
-      
+
       // หลังจากอัพเดตสถานะแล้ว ให้เปลี่ยนโหมดเป็น manual
       await handleUpdateM(id, "manual");  // เปลี่ยนโหมดเป็น manual
       fetchdata();  // รีเฟรชข้อมูล
@@ -73,67 +73,61 @@ const HomePage = () => {
     fetchdata();
   }, []);
 
+  // ฟังก์ชันเพื่อจัดการสีของสถานะต่างๆ
+  const getStatusColor = () => {
+    const { state, mode } = data[0] || {};
+    if (mode === "auto") return "bg-primary";
+    return state === "1" ? "bg-success" : "bg-danger";
+  };
+
   return (
-    <div className="container mt-4">
-      <h1 className="mb-4 text-center">Water pump control</h1>
-      <div className="row">
-        <div className="col-md-4 mb-4 d-flex">
-          {/* Card for Ultrasonic & LED Ultrasonic */}
-          <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title border border-dark p-2 rounded">State & Mode</h5>
-              <p className="card-text">
-                <strong>State:</strong> {data[0]?.state || 'Loading...'}
-              </p>
-              <p className="card-text">
-                <strong>Mode:</strong> {data[0]?.mode || 'Loading...'}
-              </p>
+    <div className="container mt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+      <div className="col-md-5 d-flex flex-column p-4 rounded shadow-lg" style={{ backgroundColor: '#f8f9fa' }}>
+        
+        <h1 className="text-center mb-4 text-primary">Sensor Dashboard</h1>
+
+        {/* แถบสีสถานะ (แสดงแค่แถบสีสถานะเดียว) */}
+        <div className={`p-2 mb-3 text-white ${getStatusColor()}`} style={{ height: '30px', borderRadius: '5px' }}></div>
+
+        {/* กล่องควบคุมสถานะและโหมดในกล่องเดียวกัน */}
+        {/* กล่องควบคุมสถานะ */}
+        <div className="card mb-3 border-0">
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title text-center mb-3" style={{ fontSize: '1.25rem' }}>Power Control</h5>
+            <div className="d-flex gap-4 justify-content-center mt-auto">
+              <button
+                className="btn btn-danger btn-lg"
+                onClick={() => handleUpdateS(data[0]?.id, 0)} // ปิดปั๊ม
+              >
+                OFF
+              </button>
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => handleUpdateS(data[0]?.id, 1)} // เปิดปั๊ม
+              >
+                ON
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="col-md-4 mb-4 d-flex">
-          {/* Card for LED Status & Controls */}
-          <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title border border-dark p-2 rounded">Power Control</h5>
-               <div className="d-flex gap-3 mt-auto">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleUpdateS(data[0]?.id, 0)}
-                >
-                  off
-                </button>
-                <button
-                  className="btn btn-success"
-                  onClick={() => handleUpdateS(data[0]?.id, 1)}
-                >
-                  on
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4 mb-4 d-flex">
-          {/* Card for Mode Control */}
-          <div className="card flex-fill" style={{ backgroundColor: '#ffcc00', color: '#000' }}>
-            <div className="card-body d-flex flex-column">
-              <h5 className="card-title border border-dark p-2 rounded">Mode Control</h5>
-               <div className="d-flex gap-3 mt-auto">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleUpdateM(data[0]?.id, "auto")}
-                >
-                  auto
-                </button>
-                <button
-                  className="btn btn-success"
-                  onClick={() => handleUpdateM(data[0]?.id, "manual")}
-                >
-                  manual
-                </button>
-              </div>
+        {/* กล่องควบคุมโหมด */}
+        <div className="card border-0">
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title text-center mb-3" style={{ fontSize: '1.25rem' }}>Mode Control</h5>
+            <div className="d-flex gap-4 justify-content-center mt-auto">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => handleUpdateM(data[0]?.id, "auto")} // โหมด AUTO
+              >
+                AUTO
+              </button>
+              <button
+                className="btn btn-warning btn-lg"
+                onClick={() => handleUpdateM(data[0]?.id, "manual")} // โหมด MANUAL
+              >
+                MANUAL
+              </button>
             </div>
           </div>
         </div>

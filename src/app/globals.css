@@ -35,8 +35,15 @@ a {
   text-decoration: none;
 }
 
+.btn-large {
+  font-size: 32px !important;    /* ปรับขนาดฟอนต์ */
+  padding: 25px 40px !important; /* เพิ่ม padding เพื่อให้ปุ่มใหญ่ขึ้น */
+}
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 }
+

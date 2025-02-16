@@ -87,8 +87,8 @@ const HomePage = () => {
   };
 
   return (
-    <div className="container mt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <div className="col-md-5 d-flex flex-column p-4 rounded shadow-lg" style={{ backgroundColor: '#f8f9fa' }}>
+    <div className="container mt-4 d-flex justify-content-center align-items-start" style={{ minHeight: '100vh' }}>
+      <div className="col-md-5 d-flex flex-column p-4 rounded shadow-lg" style={{ backgroundColor: '#f8f9fa' , marginTop: '30px'}}>
         
         <h1 className="text-center mb-4 text-primary">Water Pump Dashboard</h1>
 

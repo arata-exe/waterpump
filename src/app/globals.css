@@ -10,11 +10,12 @@
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+html, body {
+  overflow: hidden; /* ป้องกันการเลื่อน */
+  height: 100%; /* ทำให้ความสูงของ body ครอบคลุมทั้งหน้าจอ */
+  margin: 0; /* ป้องกันการแสดง margin ที่อาจจะเกิดขึ้น */
 }
+
 
 body {
   color: var(--foreground);
@@ -35,15 +36,8 @@ a {
   text-decoration: none;
 }
 
-.btn-large {
-  font-size: 32px !important;    /* ปรับขนาดฟอนต์ */
-  padding: 25px 40px !important; /* เพิ่ม padding เพื่อให้ปุ่มใหญ่ขึ้น */
-}
-
-
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 }
-

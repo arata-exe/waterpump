@@ -2,10 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+import "./globals.css";  // Make sure your CSS is imported
 
 const HomePage = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+
+  // ล็อกการเลื่อนเมื่อหน้าเว็บโหลด
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'; // ป้องกันการเลื่อน
+    return () => {
+      document.body.style.overflow = ''; // รีเซ็ตการเลื่อนเมื่อออกจากหน้า
+    };
+  }, []);
 
   const fetchdata = async () => {
     try {
@@ -33,15 +42,13 @@ const HomePage = () => {
         },
         body: JSON.stringify({ state: value }),
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to update state");
       }
 
-      // หลังจากอัพเดตสถานะแล้ว ให้เปลี่ยนโหมดเป็น manual
       await handleUpdateM(id, "manual");  // เปลี่ยนโหมดเป็น manual
       fetchdata();  // รีเฟรชข้อมูล
-
     } catch (error) {
       console.error("Error updating state:", error);
       setError(error);
@@ -62,7 +69,6 @@ const HomePage = () => {
       if (!response.ok) {
         throw new Error("Failed to update mode");
       }
-
     } catch (error) {
       console.error("Error updating mode:", error);
       setError(error);
@@ -96,13 +102,13 @@ const HomePage = () => {
             <h5 className="card-title text-center mb-3" style={{ fontSize: '1.25rem' }}>Power Control</h5>
             <div className="d-flex gap-4 justify-content-center mt-auto">
               <button
-                className="btn btn-danger btn-lg"
+                className="btn btn-danger btn-lg w-100"
                 onClick={() => handleUpdateS(data[0]?.id, 0)} // ปิดปั๊ม
               >
                 OFF
               </button>
               <button
-                className="btn btn-success btn-lg"
+                className="btn btn-success btn-lg w-100"
                 onClick={() => handleUpdateS(data[0]?.id, 1)} // เปิดปั๊ม
               >
                 ON
@@ -117,13 +123,13 @@ const HomePage = () => {
             <h5 className="card-title text-center mb-3" style={{ fontSize: '1.25rem' }}>Mode Control</h5>
             <div className="d-flex gap-4 justify-content-center mt-auto">
               <button
-                className="btn btn-primary btn-lg"
+                className="btn btn-primary btn-lg w-100"
                 onClick={() => handleUpdateM(data[0]?.id, "auto")} // โหมด AUTO
               >
                 AUTO
               </button>
               <button
-                className="btn btn-warning btn-lg"
+                className="btn btn-warning btn-lg w-100"
                 onClick={() => handleUpdateM(data[0]?.id, "manual")} // โหมด MANUAL
               >
                 MANUAL
